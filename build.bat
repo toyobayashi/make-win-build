@@ -13,15 +13,15 @@ if /i "%1"=="--tag"     set curargname=%1&set curargvalue=%2&goto set-tag
 
 :set-arch
 if /i "%curargvalue:~0,2%"=="--" echo Invalid argument of %curargname%: %curargvalue% 1>&2&exit /b 1
-set arch=%curargname%
-echo arch: %curargname%
+set arch=%curargvalue%
+echo arch: %curargvalue%
 if /i "%arch%"=="x86"           set vcvars=vcvars32.bat&goto arg-ok-2
 if /i "%arch%"=="x64"           set vcvars=vcvars64.bat&goto arg-ok-2
 
 :set-tag
 if /i "%curargvalue:~0,2%"=="--" echo Invalid argument of %curargname%: %curargvalue% 1>&2&exit /b 1
-echo tag: %curargname%
-set tag=%curargname%&goto arg-ok-2
+echo tag: %curargvalue%
+set tag=%curargvalue%&goto arg-ok-2
 
 :arg-ok-2
 shift
