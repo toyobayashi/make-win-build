@@ -19,18 +19,14 @@ jobs:
         - 'x64'
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: msys2/setup-msys2@v2
       with:
         msystem: UCRT64
         update: true
         # install: git mingw-w64-x86_64-toolchain
 
-    - name: Build x86
-      shell: cmd
-      run: call build.bat --arch ${{ matrix.arch }} --tag ${{ github.event.inputs.tag }}
-    
-    - name: Build x64
+    - name: Build
       shell: cmd
       run: call build.bat --arch ${{ matrix.arch }} --tag ${{ github.event.inputs.tag }}
 
