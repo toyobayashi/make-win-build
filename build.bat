@@ -34,11 +34,12 @@ set curargname=
 set curargvalue=
 if "%arch%" == "" set arch=x64& set vcvars=vcvars64.bat
 
-if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\%vcvars%" (
-  call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\%vcvars%"
+if exist "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\%vcvars%" (
+  call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\%vcvars%"
 ) else (
-  call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\%vcvars%"
+  call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\%vcvars%"
 )
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 set Path=%Path%;C:\msys64\usr\bin
 
