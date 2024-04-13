@@ -1,6 +1,11 @@
 name: Build
 
-on: workflow_dispatch 
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The tag of make'
+        required: true
 
 jobs:
   build:
@@ -8,6 +13,10 @@ jobs:
     runs-on: windows-latest
     strategy:
       fail-fast: false
+      matrix:
+        arch:
+        - 'x86'
+        - 'x64'
 
     steps:
     - uses: actions/checkout@v2
@@ -19,11 +28,11 @@ jobs:
 
     - name: Build x86
       shell: cmd
-      run: call build.bat x86
+      run: call build.bat --arch ${{ matrix.arch }} --tag ${{ github.event.inputs.tag }}
     
     - name: Build x64
       shell: cmd
-      run: call build.bat
+      run: call build.bat --arch ${{ matrix.arch }} --tag ${{ github.event.inputs.tag }}
 
     - uses: actions/upload-artifact@v2
       with:

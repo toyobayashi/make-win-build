@@ -1,18 +1,37 @@
 @echo off
 
+set curargname=
+set curargvalue=
 set arch=
 set vcvars=
+set tag=
 
 :next-arg
 if "%1"=="" goto args-done
-if /i "%1"=="x86"           set arch=x86&set vcvars=vcvars32.bat&goto arg-ok
-if /i "%1"=="x64"           set arch=x64&set vcvars=vcvars64.bat&goto arg-ok
+if /i "%1"=="--arch"        set curargname=%1&set curargvalue=%2&goto set-arch
+if /i "%1"=="--tag"     set curargname=%1&set curargvalue=%2&goto set-tag
 
+:set-arch
+if /i "%curargvalue:~0,2%"=="--" echo Invalid argument of %curargname%: %curargvalue% 1>&2&exit /b 1
+set arch=%curargname%
+echo arch: %curargname%
+if /i "%arch%"=="x86"           set vcvars=vcvars32.bat&goto arg-ok-2
+if /i "%arch%"=="x64"           set vcvars=vcvars64.bat&goto arg-ok-2
+
+:set-tag
+if /i "%curargvalue:~0,2%"=="--" echo Invalid argument of %curargname%: %curargvalue% 1>&2&exit /b 1
+echo tag: %curargname%
+set tag=%curargname%&goto arg-ok-2
+
+:arg-ok-2
+shift
 :arg-ok
 shift
 goto next-arg
 
 :args-done
+set curargname=
+set curargvalue=
 if "%arch%" == "" set arch=x64& set vcvars=vcvars64.bat
 
 if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\%vcvars%" (
@@ -23,11 +42,8 @@ if exist "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxi
 
 set Path=%Path%;C:\msys64\usr\bin
 
-set tag=4.3
 set name=make-%tag%
 set zipname=%name%.zip
-
-echo tag: %tag%
 
 if not exist %zipname% powershell.exe -nologo -noprofile -command "& { (new-object System.Net.WebClient).DownloadFile('https://github.com/mirror/make/archive/refs/tags/%tag%.zip', '%zipname%'); exit !$?; }"
 if exist %name% rd /s /q %name%
